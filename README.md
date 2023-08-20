@@ -36,6 +36,7 @@ To install an extension, your project must be on the [Blaze (pay as you go) plan
 
 * Your TTL Period: How many days should the data be stored for? This requires configuration that this extension does not handle automatically: Setting the Firestore TTL to delete documents.
 
+* Excluded Keys: Document fields that should be ignored when storing changes. This is useful for fields that are updated frequently, but do not need to be stored in the changelog. For example, a field that stores the last time the document was updated.
 
 **Cloud Functions:**
 
