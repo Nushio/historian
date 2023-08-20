@@ -48,13 +48,13 @@ resources:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
 params:
   - param: YOUR_COLLECTION
-    label: Cloud Firestore path
+    label: Monitored Collection Name
     description: Where do you want to watch for changes?
     type: string
     default: path/to/{collectionId}  # Specifying a default is optional.
     required: true
   - param: CHANGED_SUBCOLLECTION_NAME
-    label: Where to store changes
+    label: SubCollection Name where changes will be stored
     description: >-
       Where the difference will be stored, in a subcollection.
     type: string
@@ -62,11 +62,21 @@ params:
     required: true
     immutable: false
   - param: DELETE_AFTER
-    label: For TTL
+    label: Delete After, (Days), For Time-to-Live
     description: >-
       Adds deleteAfter to the document. Use with Firebase TTL so changes are deleted after a certain amount of time.
     type: string
     validationRegex: ^\d+$
     default: 30
+    required: true
+    immutable: false
+  - param: EXCLUDED_DOCUMENT_KEYS
+    label: Excluded fields, comma separated
+    description: >-
+      Document Fields that will be excluded. If these fields change, historian won't make a changelog document.
+      This is useful for documents where fields change often, but the data is otherwise unnecessary, like a "lastUpdated" field.
+      No spaces, just comma separated. E.g. "lastUpdated,lastModified,lastChanged"
+    type: string
+    default: 
     required: true
     immutable: false

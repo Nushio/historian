@@ -12,6 +12,9 @@ export const getChanges = (
 
   const flattenedAfter = flattenDoc(after);
   const flattenedBefore = flattenDoc(before);
+  const customExcludedKeys =
+    process.env.EXCLUDED_DOCUMENT_KEYS?.replace(" ", "")?.split(",") ?? [];
+  const excludedKeys = [...defaultExcludedKeys, ...customExcludedKeys];
   const updatedKeys = Object.keys(flattenedAfter)
     .filter((key) => !excludedKeys.includes(key))
     .filter((key) => !isEqual(flattenedBefore[key], flattenedAfter[key]));
@@ -37,4 +40,4 @@ const optional = (value: unknown) => {
   return value;
 };
 
-const excludedKeys = ["updatedAt"];
+const defaultExcludedKeys = ["updatedAt"];

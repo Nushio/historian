@@ -13,15 +13,11 @@
 
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import { getChanges } from "./get-changes";
-import {
-  DocumentSnapshot,
-  FieldValue,
-  Firestore,
-  Timestamp,
-} from "firebase-admin/firestore";
+import { DocumentSnapshot, Firestore } from "firebase-admin/firestore";
+import { writeDeleted } from "./write-deleted";
+import { writeChange } from "./write-change";
 
-let db: Firestore;
+export let db: Firestore;
 let initialized = false;
 
 /**
@@ -33,67 +29,6 @@ async function initialize() {
   admin.initializeApp();
   db = admin.firestore();
 }
-
-function calculateDeleteAfter() {
-  let deleteAfterDays = 30;
-  try {
-    deleteAfterDays = parseInt(process.env.DELETE_AFTER ?? "") ?? 30;
-  } catch (_) {
-    console.error("DELETE_AFTER is not a number, defaulting to 30 days");
-  }
-  // Convert today, plus deleteAfterDays, to a Firestore Timestamp
-  const deleteAfter = Timestamp.fromDate(
-    new Date(Date.now() + deleteAfterDays * 24 * 60 * 60 * 1000)
-  );
-  return deleteAfter;
-}
-
-async function writeDeleted(snapshot: DocumentSnapshot) {
-  const docRef = db
-    .collection(
-      `${snapshot.ref.path}/${
-        process.env.CHANGED_SUBCOLLECTION_NAME ?? "historian"
-      }`
-    )
-    .doc("deleted-snapshot");
-  const data = snapshot.data();
-
-  if (data) {
-    await docRef.set({
-      ...data,
-      deletedAt: FieldValue.serverTimestamp(),
-      deleteAfter: calculateDeleteAfter(),
-    });
-  }
-}
-
-async function writeChange(before: DocumentSnapshot, after: DocumentSnapshot) {
-  const docRef = db
-    .collection(
-      `${after.ref.path}/${
-        process.env.CHANGED_SUBCOLLECTION_NAME ?? "historian"
-      }`
-    )
-    .doc(`v${generateVersionId()}`);
-  const changes = getChanges(before.data(), after.data());
-
-  if (changes) {
-    await docRef.set(
-      {
-        ...changes,
-        updatedAt: FieldValue.serverTimestamp(),
-        deleteAfter: calculateDeleteAfter(),
-      },
-      { merge: true }
-    );
-  }
-  return;
-}
-
-export const generateVersionId = () => {
-  const now = new Date().toISOString().replace(":", "-").replace(".", "-");
-  return now;
-};
 
 export const processEvent = functions.firestore
   .document(process.env.YOUR_COLLECTION ?? "")
