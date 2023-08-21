@@ -20,6 +20,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@types/lodash": "4.14.197",
     "firebase-admin": "11.10.1",
     "firebase-functions": "4.4.1",
     "lodash": "4.17.21",
@@ -27,7 +28,6 @@
   },
   "devDependencies": {
     "@types/chai": "4.3.5",
-    "@types/lodash": "4.14.197",
     "@types/mocha": "10.0.1",
     "@typescript-eslint/eslint-plugin": "6.4.0",
     "@typescript-eslint/parser": "6.4.0",
