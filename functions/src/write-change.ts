@@ -18,14 +18,15 @@ export async function writeChange(
   const changes = getChanges(before.data(), after.data());
 
   if (changes) {
-    await docRef.set(
-      {
-        ...changes,
-        updatedAt: FieldValue.serverTimestamp(),
-        deleteAfter: calculateDeleteAfter(),
-      },
-      { merge: true }
-    );
+    const changesSnapshot = {
+      ...changes,
+      updatedAt: FieldValue.serverTimestamp(),
+    } as any;
+    const deleteAfter = calculateDeleteAfter();
+    if (deleteAfter) {
+      changesSnapshot["deleteAfter"] = deleteAfter;
+    }
+    await docRef.set(changesSnapshot, { merge: true });
   }
   return;
 }

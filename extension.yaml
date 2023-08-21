@@ -1,7 +1,7 @@
 # Learn detailed information about the fields of an extension.yaml file in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml
 name: historian
-version: 0.0.2  # Follow semver versioning
+version: 0.0.3  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -29,7 +29,7 @@ billingRequired: true
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#roles-field
 roles:
-  - role: datastore.owner
+  - role: datastore.user
     reason: Allows the extension to write to Firestore.
     
 # In the `resources` field, list each of your extension's functions, including the trigger for each function.
@@ -65,6 +65,7 @@ params:
     label: Delete After, (Days), For Time-to-Live
     description: >-
       Adds deleteAfter to the document. Use with Firebase TTL so changes are deleted after a certain amount of time.
+      Set to 0 to disable.
     type: string
     validationRegex: ^\d+$
     default: 30

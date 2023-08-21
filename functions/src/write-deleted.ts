@@ -11,12 +11,15 @@ export async function writeDeleted(snapshot: DocumentSnapshot) {
     )
     .doc("deleted-snapshot");
   const data = snapshot.data();
-
+  const deletedSnapshot = {
+    ...data,
+    deletedAt: FieldValue.serverTimestamp(),
+  } as any;
+  const deleteAfter = calculateDeleteAfter();
+  if (deleteAfter) {
+    deletedSnapshot["deleteAfter"] = deleteAfter;
+  }
   if (data) {
-    await docRef.set({
-      ...data,
-      deletedAt: FieldValue.serverTimestamp(),
-      deleteAfter: calculateDeleteAfter(),
-    });
+    await docRef.set(deletedSnapshot);
   }
 }
