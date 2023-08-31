@@ -1,7 +1,7 @@
 # Learn detailed information about the fields of an extension.yaml file in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml
 name: historian
-version: 0.0.3  # Follow semver versioning
+version: 0.0.4  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -12,6 +12,10 @@ description: >-
   Store your Firestore document history in a subcollection.
 
 license: Apache-2.0  # https://spdx.org/licenses/
+
+icon: historian.png
+
+tags: [utilities]
 
 # Public URL for the source code of your extension.
 sourceUrl: https://github.com/nushio/historian

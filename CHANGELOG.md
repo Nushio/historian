@@ -1,3 +1,6 @@
+## Version 0.0.4
+- Changed historian timestamp id.
+- Add Icon, tags. 
 ## Version 0.0.3
 - Changed permissions from owner to user.
 - Added the ability to disable deleteAfter, by setting number of days to 0

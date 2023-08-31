@@ -50,4 +50,4 @@ To install an extension, your project must be on the [Blaze (pay as you go) plan
 
 This extension will operate with the following project IAM roles:
 
-* datastore.owner (Reason: Allows the extension to delete (user) data from Cloud Firestore.)
+* datastore.user (Reason: Allows the extension to delete (user) data from Cloud Firestore.)
