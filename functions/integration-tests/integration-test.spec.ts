@@ -32,10 +32,9 @@ describe("historian-changes", () => {
       .collection("users/adalovelace/historian")
       .get();
     const changedData = changes.docs[0].data();
-    expect(changedData.changes[0]).to.eql({
+    expect(changedData.changes["born"]).to.eql({
       before: 1800,
       after: 1815,
-      key: "born",
     });
   }).timeout(10000);
 
@@ -47,12 +46,12 @@ describe("historian-changes", () => {
     expect(changedData.deleteAfter).to.exist;
   }).timeout(10000);
 
-  it("should create a document with updatedAt", async () => {
+  it("should create a document with createdAt", async () => {
     const changes = await firestore
       .collection("users/adalovelace/historian")
       .get();
     const changedData = changes.docs[0].data();
-    expect(changedData.updatedAt).to.exist;
+    expect(changedData.createdAt).to.exist;
   }).timeout(10000);
 
   it("should ignore document changes when an excluded field is updated", async () => {

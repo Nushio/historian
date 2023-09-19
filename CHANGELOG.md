@@ -1,3 +1,5 @@
+## Version 0.1.0
+- Add undo / redo functionality
 ## Version 0.0.4
 - Changed historian timestamp id.
 - Add Icon, tags. 

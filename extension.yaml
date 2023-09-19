@@ -1,7 +1,7 @@
 # Learn detailed information about the fields of an extension.yaml file in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml
 name: historian
-version: 0.0.4  # Follow semver versioning
+version: 0.1.0  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -83,5 +83,23 @@ params:
       No spaces, just comma separated. E.g. "lastUpdated,lastModified,lastChanged"
     type: string
     default: 
+    required: true
+    immutable: false
+  - param: HISTORIAN_UNDO_FIELD
+    label: Undo field name, to revert document changes
+    description: >-
+      This field allows you to specify a version on your document's historian sub-collection and automatically revert the change, by grabbing the "before" version.
+      This must be the only field in the document's update, in order to revert the change.
+    type: string
+    default: historianUndo
+    required: true
+    immutable: false
+  - param: HISTORIAN_REDO_FIELD
+    label: Re-do field name
+    description: >-
+      This field allows you to specify a version on your document's historian sub-collection and automatically re-apply the change, by grabbing the "after" version.
+      This must be the only field in the document's update, in order to re-apply the change.
+    type: string
+    default: historianRedo
     required: true
     immutable: false
