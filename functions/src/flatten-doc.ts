@@ -1,17 +1,26 @@
-import { Timestamp } from 'firebase-admin/firestore';
+import { Timestamp } from "firebase-admin/firestore";
 
-export const flattenDoc = (doc: Record<string, unknown>, prefixes: string[] = []): Record<string, unknown> => {
+/**
+ * Flattens a nested object into a single-level object with dot-separated keys.
+ * @param { Record<string, unknown> } doc - The object to flatten.
+ * @param { string[] } prefixes - An optional array of prefixes to add to the keys of the flattened object.
+ * @return { Record<string, unknown> } A new object with dot-separated keys.
+ */
+export const flattenDoc = (
+  doc: Record<string, unknown>,
+  prefixes: string[] = []
+): Record<string, unknown> => {
   if (!doc) {
     return doc;
   }
 
-  if (typeof doc === 'string') {
-    return { [prefixes.join('.')]: doc };
+  if (typeof doc === "string") {
+    return { [prefixes.join(".")]: doc };
   }
 
   return Object.keys(doc).reduce((acc: Record<string, unknown>, key) => {
     const value = doc[key] as unknown;
-    const flattenKey = [...prefixes, key].join('.');
+    const flattenKey = [...prefixes, key].join(".");
     if (value == null) {
       acc[flattenKey] = value;
     } else if (Array.isArray(value)) {
@@ -28,8 +37,11 @@ export const flattenDoc = (doc: Record<string, unknown>, prefixes: string[] = []
           })
           .reduce((accDoc, curr) => ({ ...curr, ...accDoc }), {}),
       };
-    } else if (typeof value === 'object') {
-      if (isTimestamp(value) || isDocumentReference(value as Record<string, unknown>)) {
+    } else if (typeof value === "object") {
+      if (
+        isTimestamp(value) ||
+        isDocumentReference(value as Record<string, unknown>)
+      ) {
         return {
           ...acc,
           [flattenKey]: value,
@@ -47,10 +59,20 @@ export const flattenDoc = (doc: Record<string, unknown>, prefixes: string[] = []
   }, {});
 };
 
+/**
+ * Determines whether an object is a Firestore DocumentReference.
+ * @param { Record<string, unknown> } object - The object to check.
+ * @return { boolean } True if the object is a DocumentReference, false otherwise.
+ */
 const isDocumentReference = (object: Record<string, unknown>) => {
-  return object['_path'] && object['_firestore'];
+  return object["_path"] && object["_firestore"];
 };
 
+/**
+ * Checks if the given object is an instance of a Firestore Timestamp.
+ * @param { unknown } object - The object to check.
+ * @return { boolean } Whether the object is an instance of a Firestore Timestamp.
+ */
 const isTimestamp = (object: unknown) => {
   return object instanceof Timestamp;
 };

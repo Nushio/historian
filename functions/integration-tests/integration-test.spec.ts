@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { describe, it, before } from "mocha";
 import * as admin from "firebase-admin";
 
-describe("historian-changes", () => {
+describe("integration-tests", () => {
   const projectId = "demo-test";
   let firestore: FirebaseFirestore.Firestore;
   before(async () => {

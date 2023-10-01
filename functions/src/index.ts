@@ -30,6 +30,10 @@ async function initialize() {
   db = admin.firestore();
 }
 
+/**
+ * Listens for changes to a Firestore collection and writes them to a separate database.
+ * @returns A Cloud Function that triggers on write events to the specified collection.
+ */
 export const processEvent = functions.firestore
   .document(process.env.YOUR_COLLECTION ?? "")
   .onWrite(async (change: functions.Change<DocumentSnapshot>) => {

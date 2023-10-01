@@ -2,10 +2,16 @@ import { DocumentData } from "firebase-admin/firestore";
 import { isEqual } from "lodash";
 import { flattenDoc } from "./flatten-doc";
 
+/**
+ * Returns an object containing the changes made to a Firestore document.
+ * @param { Record<string, unknown> } before - The document data before the changes.
+ * @param { DocumentData } after - The document data after the changes.
+ * @return { DocumentData | null } An object containing the changes made to the document, or null if there were no changes.
+ */
 export const getChanges = (
   before?: Record<string, unknown>,
   after?: DocumentData
-) => {
+): DocumentData | null => {
   if (!before || !after) {
     return null;
   }
@@ -19,8 +25,8 @@ export const getChanges = (
     .filter((key) => !excludedKeys.includes(key))
     .filter((key) => !isEqual(flattenedBefore[key], flattenedAfter[key]));
 
-  let changes: { [key: string]: any } = {};
-  let rawData: { [key: string]: any } = {};
+  const changes: { [key: string]: unknown } = {};
+  const rawData: { [key: string]: unknown } = {};
   for (const key of updatedKeys) {
     changes[key] = {
       before: optional(flattenedBefore[key]),
@@ -29,7 +35,7 @@ export const getChanges = (
     let rawBefore = optional(before[key]);
     let rawAfter = optional(after[key]);
     let parentKey = key;
-    if (key.indexOf("._") > 0) {
+    if (key.indexOf(".") > 0) {
       parentKey = key.split(".")[0];
       rawBefore = optional(before[parentKey]);
       rawAfter = optional(after[parentKey]);
@@ -49,6 +55,11 @@ export const getChanges = (
   };
 };
 
+/**
+ * Returns the provided value if it is not undefined, otherwise returns null.
+ * @param { unknown } value - The value to check.
+ * @return { unknown | null } The provided value if it is not undefined, otherwise null.
+ */
 const optional = (value: unknown) => {
   if (value === undefined) return null;
   return value;

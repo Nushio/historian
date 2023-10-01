@@ -1,4 +1,8 @@
-import { DocumentSnapshot, FieldValue } from "firebase-admin/firestore";
+import {
+  DocumentData,
+  DocumentSnapshot,
+  FieldValue,
+} from "firebase-admin/firestore";
 import { generateVersionId } from "./generate-version-id";
 import { getChanges } from "./get-changes";
 import { calculateDeleteAfter } from "./calculate-deleted-after";
@@ -20,13 +24,8 @@ export async function writeChange(
 
   if (changes) {
     const { changes: changeList } = changes;
-    console.log(changeList);
     if (Object.keys(changeList).length === 1) {
       const key = Object.keys(changeList)[0];
-      console.log(key);
-      console.log(changeList[key]);
-      console.log(process.env.HISTORIAN_UNDO_FIELD);
-      console.log(process.env.HISTORIAN_REDO_FIELD);
       if (
         key === process.env.HISTORIAN_UNDO_FIELD ||
         key === process.env.HISTORIAN_REDO_FIELD
@@ -42,7 +41,7 @@ export async function writeChange(
     const changesSnapshot = {
       ...changes,
       createdAt: FieldValue.serverTimestamp(),
-    } as any;
+    } as DocumentData;
     const deleteAfter = calculateDeleteAfter();
     if (deleteAfter) {
       changesSnapshot["deleteAfter"] = deleteAfter;

@@ -1,25 +1,42 @@
-import { DocumentSnapshot, FieldValue } from "firebase-admin/firestore";
+import {
+  DocumentData,
+  DocumentSnapshot,
+  FieldValue,
+} from "firebase-admin/firestore";
 import { calculateDeleteAfter } from "./calculate-deleted-after";
 import { db } from ".";
+import { info } from "firebase-functions/logger";
 
+/**
+ * Writes a snapshot of a deleted document to a subcollection in Firestore.
+ * @param { DocumentSnapshot } snapshot The snapshot of the deleted document.
+ * @return { Promise<void> } A Promise that resolves when the snapshot has been written to Firestore.
+ */
 export async function writeDeleted(snapshot: DocumentSnapshot) {
-  const docRef = db
-    .collection(
-      `${snapshot.ref.path}/${
-        process.env.CHANGED_SUBCOLLECTION_NAME ?? "historian"
-      }`
-    )
-    .doc("deleted-snapshot");
+  info(`Saving snapshot of deleted document ${snapshot.ref.path}`);
   const data = snapshot.data();
+  if (!data) {
+    info(`No data found for deleted document ${snapshot.ref.path}`);
+    return;
+  }
   const deletedSnapshot = {
     ...data,
     deletedAt: FieldValue.serverTimestamp(),
-  } as any;
+  } as DocumentData;
+
   const deleteAfter = calculateDeleteAfter();
   if (deleteAfter) {
     deletedSnapshot["deleteAfter"] = deleteAfter;
   }
-  if (data) {
-    await docRef.set(deletedSnapshot);
+  let subcollectionName = "historian";
+  if (
+    process.env.CHANGED_SUBCOLLECTION_NAME !== undefined &&
+    process.env.CHANGED_SUBCOLLECTION_NAME !== "undefined"
+  ) {
+    subcollectionName = process.env.CHANGED_SUBCOLLECTION_NAME ?? "historian";
   }
+  const docRef = db
+    .collection(`${snapshot.ref.path}/${subcollectionName}`)
+    .doc("deleted-snapshot");
+  await docRef.set(deletedSnapshot);
 }
