@@ -1,3 +1,5 @@
+## Version 0.2.0
+- Updated libraries and dependencies
 ## Version 0.1.0
 - Add undo / redo functionality
 ## Version 0.0.4
