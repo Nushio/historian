@@ -1,8 +1,8 @@
 # Learn detailed information about the fields of an extension.yaml file in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml
 name: historian
-version: 0.1.0  # Follow semver versioning
-specVersion: v1beta  # Version of the Firebase Extensions specification
+version: 0.2.0 # Follow semver versioning
+specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
 displayName: Historian
@@ -11,7 +11,7 @@ displayName: Historian
 description: >-
   Store your Firestore document history in a subcollection.
 
-license: Apache-2.0  # https://spdx.org/licenses/
+license: Apache-2.0 # https://spdx.org/licenses/
 
 icon: historian.png
 
@@ -35,7 +35,7 @@ billingRequired: true
 roles:
   - role: datastore.user
     reason: Allows the extension to write to Firestore.
-    
+
 # In the `resources` field, list each of your extension's functions, including the trigger for each function.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#resources-field
@@ -55,7 +55,7 @@ params:
     label: Monitored Collection Name
     description: Where do you want to watch for changes?
     type: string
-    default: path/to/{collectionId}  # Specifying a default is optional.
+    default: path/to/{collectionId} # Specifying a default is optional.
     required: true
   - param: CHANGED_SUBCOLLECTION_NAME
     label: SubCollection Name where changes will be stored
@@ -82,7 +82,7 @@ params:
       This is useful for documents where fields change often, but the data is otherwise unnecessary, like a "lastUpdated" field.
       No spaces, just comma separated. E.g. "lastUpdated,lastModified,lastChanged"
     type: string
-    default: 
+    default:
     required: true
     immutable: false
   - param: HISTORIAN_UNDO_FIELD
