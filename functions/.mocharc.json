@@ -5,6 +5,7 @@
     "integration-tests/**/*.spec.*"
   ],
   "watch-files": [
-    "src"
+    "src",
+    "src/utils"
   ]
 }

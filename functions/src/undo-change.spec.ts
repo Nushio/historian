@@ -1,8 +1,9 @@
 import * as sinon from "sinon";
 import { expect } from "chai";
 import { undoChange } from "./undo-change";
-import * as historianIndex from ".";
+import * as historianInit from "./init";
 import { FieldValue } from "firebase-admin/firestore";
+
 describe("undoChange", () => {
   const collectionStub = sinon.stub();
   const docStub = sinon.stub();
@@ -13,7 +14,7 @@ describe("undoChange", () => {
 
   before(() => {
     process.env.CHANGED_SUBCOLLECTION_NAME = "historian";
-    sinon.stub(historianIndex, "db").value({
+    sinon.stub(historianInit, "db").value({
       collection: collectionStub,
       doc: docStub,
     } as unknown as FirebaseFirestore.Firestore);
@@ -74,7 +75,7 @@ describe("undoChange", () => {
         foo: "bar",
         historianUndo: "deleted",
         historianRedo: "deleted",
-      })
+      }),
     ).to.have.been.true;
   });
 
@@ -95,7 +96,7 @@ describe("undoChange", () => {
         foo: "baz",
         historianUndo: "deleted",
         historianRedo: "deleted",
-      })
+      }),
     ).to.have.been.true;
   });
 });

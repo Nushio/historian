@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { warn } from "firebase-functions/logger";
+import { logWarn } from "./logger";
 
 /**
  * Calculates the date after which a document should be deleted from Firestore.
@@ -16,11 +16,11 @@ export function calculateDeleteAfter(): Timestamp | null {
     deleteAfterDays = parseInt(process.env.DELETE_AFTER ?? "") ?? 0;
 
     if (isNaN(deleteAfterDays)) {
-      warn("DELETE_AFTER is not a number, defaulting to null");
+      logWarn("DELETE_AFTER is not a number, defaulting to null");
       return null;
     }
   } catch (_) {
-    warn("DELETE_AFTER is not a number, defaulting to null");
+    logWarn("DELETE_AFTER is not a number, defaulting to null");
     return null;
   }
   if (deleteAfterDays === 0) {
@@ -28,7 +28,7 @@ export function calculateDeleteAfter(): Timestamp | null {
   }
   // Convert today, plus deleteAfterDays, to a Firestore Timestamp
   const deleteAfter = Timestamp.fromDate(
-    new Date(Date.now() + deleteAfterDays * 24 * 60 * 60 * 1000)
+    new Date(Date.now() + deleteAfterDays * 24 * 60 * 60 * 1000),
   );
   return deleteAfter;
 }

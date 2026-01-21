@@ -3,9 +3,9 @@ import {
   DocumentSnapshot,
   FieldValue,
 } from "firebase-admin/firestore";
-import { calculateDeleteAfter } from "./calculate-deleted-after";
-import { db } from ".";
-import { info } from "firebase-functions/logger";
+import { calculateDeleteAfter } from "./utils/calculate-deleted-after";
+import { db } from "./init";
+import { logInfo } from "./utils/logger";
 
 /**
  * Writes a snapshot of a deleted document to a subcollection in Firestore.
@@ -13,10 +13,10 @@ import { info } from "firebase-functions/logger";
  * @return { Promise<void> } A Promise that resolves when the snapshot has been written to Firestore.
  */
 export async function writeDeleted(snapshot: DocumentSnapshot) {
-  info(`Saving snapshot of deleted document ${snapshot.ref.path}`);
+  logInfo(`Saving snapshot of deleted document ${snapshot.ref.path}`);
   const data = snapshot.data();
   if (!data) {
-    info(`No data found for deleted document ${snapshot.ref.path}`);
+    logInfo(`No data found for deleted document ${snapshot.ref.path}`);
     return;
   }
   const deletedSnapshot = {

@@ -5,11 +5,11 @@ import {
   DocumentSnapshot,
   FieldValue,
 } from "firebase-admin/firestore";
-import * as calculateDeleteAfter from "./calculate-deleted-after";
-import * as historianIndex from ".";
+import * as calculateDeleteAfter from "./utils/calculate-deleted-after";
+import * as historianInit from "./init";
 import * as undoChange from "./undo-change";
-import * as getChanges from "./get-changes";
-import * as generateVersionId from "./generate-version-id";
+import * as getChanges from "./utils/get-changes";
+import * as generateVersionId from "./utils/generate-version-id";
 import * as sinon from "sinon";
 
 describe("writeChange", () => {
@@ -53,7 +53,7 @@ describe("writeChange", () => {
       .stub(generateVersionId, "generateVersionId")
       .value(generateVersionIdStub);
 
-    sinon.stub(historianIndex, "db").value({
+    sinon.stub(historianInit, "db").value({
       collection: collectionStub,
     } as unknown as FirebaseFirestore.Firestore);
 
@@ -103,7 +103,7 @@ describe("writeChange", () => {
     // Call the writeChange function
     await writeChange(
       beforeSnapshot as DocumentSnapshot<DocumentData>,
-      afterSnapshot as DocumentSnapshot<DocumentData>
+      afterSnapshot as DocumentSnapshot<DocumentData>,
     );
 
     expect(collectionStub.calledOnce).to.be.true;
@@ -122,7 +122,7 @@ describe("writeChange", () => {
         },
         createdAt: 1234567890,
         deleteAfter: 987654321,
-      })
+      }),
     ).to.be.true;
   });
 });

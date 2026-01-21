@@ -5,8 +5,8 @@ import {
   DocumentSnapshot,
   FieldValue,
 } from "firebase-admin/firestore";
-import * as calculateDeleteAfter from "./calculate-deleted-after";
-import * as historianIndex from ".";
+import * as calculateDeleteAfter from "./utils/calculate-deleted-after";
+import * as historianInit from "./init";
 import * as sinon from "sinon";
 
 describe("writeDeleted", () => {
@@ -30,7 +30,7 @@ describe("writeDeleted", () => {
       .stub(calculateDeleteAfter, "calculateDeleteAfter")
       .value(calculateDeleteAfterStub);
 
-    sinon.stub(historianIndex, "db").value({
+    sinon.stub(historianInit, "db").value({
       collection: collectionStub,
     } as unknown as FirebaseFirestore.Firestore);
 
@@ -80,7 +80,7 @@ describe("writeDeleted", () => {
         some: "data",
         deletedAt: 1234567890,
         deleteAfter: 987654321,
-      })
+      }),
     ).to.be.true;
   });
 
@@ -93,7 +93,7 @@ describe("writeDeleted", () => {
       },
     } as unknown as DocumentSnapshot<DocumentData>;
     await writeDeleted(
-      tmpSnapshot as unknown as DocumentSnapshot<DocumentData>
+      tmpSnapshot as unknown as DocumentSnapshot<DocumentData>,
     );
 
     expect(collectionStub.calledOnce).to.not.be.true;
@@ -109,7 +109,7 @@ describe("writeDeleted", () => {
         some: "data",
         deletedAt: 1234567890,
         deleteAfter: 987654321,
-      })
+      }),
     ).to.be.true;
   });
 
@@ -121,7 +121,7 @@ describe("writeDeleted", () => {
       setStub.calledWith({
         some: "data",
         deletedAt: 1234567890,
-      })
+      }),
     ).to.be.true;
   });
 

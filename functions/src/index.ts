@@ -11,32 +11,20 @@
  *
  */
 
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import { DocumentSnapshot, Firestore } from "firebase-admin/firestore";
+import { DocumentSnapshot } from "firebase-admin/firestore";
+// Use Functions v1 as firestore extensions don't support v2 yet :-(
+import { firestore, Change } from "firebase-functions/v1";
 import { writeDeleted } from "./write-deleted";
 import { writeChange } from "./write-change";
-
-export let db: Firestore;
-let initialized = false;
-
-/**
- * Initializes Admin SDK & SMTP connection if not already initialized.
- */
-async function initialize() {
-  if (initialized === true) return;
-  initialized = true;
-  admin.initializeApp();
-  db = admin.firestore();
-}
+import { initialize } from "./init";
 
 /**
  * Listens for changes to a Firestore collection and writes them to a separate database.
  * @returns A Cloud Function that triggers on write events to the specified collection.
  */
-export const processEvent = functions.firestore
+export const processEvent = firestore
   .document(process.env.YOUR_COLLECTION ?? "")
-  .onWrite(async (change: functions.Change<DocumentSnapshot>) => {
+  .onWrite(async (change: Change<DocumentSnapshot>) => {
     await initialize();
     const { before, after } = change;
     if (!before.exists) {

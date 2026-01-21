@@ -1,6 +1,6 @@
 import { FieldValue } from "firebase-admin/firestore";
-import { db } from ".";
-import { info } from "firebase-functions/logger";
+import { db } from "./init";
+import { logInfo } from "./utils/logger";
 /**
  * Undoes or redoes a change for a document at a specific historian version.
  * @param { string } documentPath - The path of the document to undo/redo changes for.
@@ -11,13 +11,13 @@ import { info } from "firebase-functions/logger";
 export const undoChange = async (
   documentPath: string,
   historianVersionID: string,
-  action: "before" | "after"
+  action: "before" | "after",
 ) => {
   // Return a timestamp, without any non-numeric characters from the ISO string
-  info(
+  logInfo(
     `${
       action === "before" ? "Undoing" : "Redoing"
-    } change for document ${documentPath} at version ${historianVersionID}`
+    } change for document ${documentPath} at version ${historianVersionID}`,
   );
 
   const historianUndoField =
@@ -32,8 +32,8 @@ export const undoChange = async (
     .doc(historianVersionID)
     .get();
   if (!versionDocument.exists) {
-    info(
-      `Version ${historianVersionID} does not exist for document ${documentPath}`
+    logInfo(
+      `Version ${historianVersionID} does not exist for document ${documentPath}`,
     );
     await db.doc(documentPath).update({
       [historianUndoField]: FieldValue.delete(),
@@ -43,22 +43,24 @@ export const undoChange = async (
   }
   const originalDocument = await db.doc(documentPath).get();
   if (!originalDocument.exists) {
-    info(
-      `Document ${documentPath} does not exist. Cannot undo version ${historianVersionID}`
+    logInfo(
+      `Document ${documentPath} does not exist. Cannot undo version ${historianVersionID}`,
     );
     return;
   }
   const originalData = originalDocument.data();
   const versionData = versionDocument.data();
   if (!originalData || !versionData) {
-    info(
-      `Document ${documentPath} or version ${historianVersionID} is missing data. Cannot undo.`
+    logInfo(
+      `Document ${documentPath} or version ${historianVersionID} is missing data. Cannot undo.`,
     );
     return;
   }
   const { rawData } = versionData;
   if (!rawData) {
-    info(`Version ${historianVersionID} is missing rawData. Cannot ${action}.`);
+    logInfo(
+      `Version ${historianVersionID} is missing rawData. Cannot ${action}.`,
+    );
     return;
   }
   const changesList: { [key: string]: unknown } = {};

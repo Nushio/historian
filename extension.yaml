@@ -1,7 +1,7 @@
 # Learn detailed information about the fields of an extension.yaml file in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml
 name: historian
-version: 0.2.1 # Follow semver versioning
+version: 0.3.0 # Follow semver versioning
 specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
@@ -19,6 +19,16 @@ tags: [utilities]
 
 # Public URL for the source code of your extension.
 sourceUrl: https://github.com/nushio/historian
+
+author:
+  authorName: Juan Rodriguez
+  email: github@k3rnel.net
+  url: https://github.com/nushio
+contributors:
+  - authorName: Bryan Jenson
+    url: https://github.com/bjjenson
+  - authorName: charlie-topete
+    url: https://github.com/charlie-topete
 
 # Specify whether a paid-tier billing plan is required to use your extension.
 # Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
@@ -46,7 +56,7 @@ resources:
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${PROJECT_ID}/databases/(default)/documents/${param:YOUR_COLLECTION}/{id}
-      runtime: "nodejs20"
+      runtime: "nodejs22"
 # In the `params` field, set up your extension's user-configured parameters.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
@@ -101,5 +111,22 @@ params:
       This must be the only field in the document's update, in order to re-apply the change.
     type: string
     default: historianRedo
+    required: true
+    immutable: false
+  - param: LOG_LEVEL
+    label: Log Level
+    description: >-
+      Controls the verbosity of logs.
+    type: select
+    options:
+      - label: Info
+        value: INFO
+      - label: Warn
+        value: WARN
+      - label: Error
+        value: ERROR
+      - label: Silent
+        value: SILENT
+    default: INFO
     required: true
     immutable: false
