@@ -1,3 +1,5 @@
+## Version 0.2.1
+- Updated node version to 20 (Thanks @charlie-topete)
 ## Version 0.2.0
 - Updated libraries and dependencies
 ## Version 0.1.0
