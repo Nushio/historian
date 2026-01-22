@@ -6,7 +6,7 @@
 
 You can configure this extension with the subcollection name. The default subcollection is named historian.
 
-You can configure this extension with the period of days the data will be stored. The default is 30 days. This requires configuration that this extension does not handle automatically: Setting the Firestore TTL to delete documents.
+You can configure this extension with the period of days the data will be stored. The default is 30 days. This requires configuration that this extension does not handle automatically: [Setting the Firestore TTL to delete documents](https://firebase.google.com/docs/firestore/ttl).
 
 ![Standard Screenshot with Changes](https://github.com/nushio/historian/blob/main/Screenshot.png?raw=true)
 
